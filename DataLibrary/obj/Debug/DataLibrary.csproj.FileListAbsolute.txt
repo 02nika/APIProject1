@@ -1,0 +1,17 @@
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\obj\Debug\DataLibrary.csprojAssemblyReference.cache
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\obj\Debug\DataLibrary.csproj.CoreCompileInputs.cache
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\DataLibrary.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\DataLibrary.pdb
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\Dapper.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Configuration.ConfigurationManager.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Security.AccessControl.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Security.Permissions.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Security.Principal.Windows.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\Dapper.xml
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Configuration.ConfigurationManager.xml
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Security.AccessControl.xml
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Security.Permissions.xml
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\bin\Debug\System.Security.Principal.Windows.xml
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\obj\Debug\DataLibrary.csproj.CopyComplete
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\obj\Debug\DataLibrary.dll
+D:\nika\c#\JOB\First\FirstAPIProject\DataLibrary\obj\Debug\DataLibrary.pdb
