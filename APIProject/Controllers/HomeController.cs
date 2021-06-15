@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using DataLibrary.DataAccess;
 using Newtonsoft.Json;
+using System.Text.Json;
+using DataLibrary.Models;
+using System.IO;
+using System.Net;
 
 namespace APIProject.Controllers
 {
@@ -35,7 +39,40 @@ namespace APIProject.Controllers
             //ViewBag.Message = "Your Account page.";
             //return View();
 
-            return Json(SQLDataAccess.LoadAccDictTable(id), JsonRequestBehavior.AllowGet);
+
+            var JsonOBJ = SQLDataAccess.LoadAccDictTable(id);
+
+
+            return Json(JsonOBJ, JsonRequestBehavior.AllowGet);
+
         }
+
+
+        [HttpPost]
+        public ActionResult JsonRequest(int? id) 
+        {
+            // თავდაპირველად ვიჭერთ json რექუესთს.
+            Request.InputStream.Seek(0, SeekOrigin.Begin);
+            string json = new StreamReader(Request.InputStream).ReadToEnd();
+            AcctID input = JsonConvert.DeserializeObject<AcctID>(json);
+            //
+
+
+
+            //ასე უნდა დავაბრუნოთ ჯეისონი
+            //return Content(JsonConvert.SerializeObject(input), "application/json");
+            //Json(SQLDataAccess.LoadJsonRequest(input));
+
+            Dictionary<string, AcctID> dict1 = SQLDataAccess.LoadJsonRequest(input);
+            
+            return Content(JsonConvert.SerializeObject(dict1), "application/json");
+        }
+
+        [HttpGet]
+        public ActionResult JsonRequest()
+        {
+            return View();
+        }
+
     }
 }

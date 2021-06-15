@@ -14,13 +14,35 @@ namespace DataLibrary.DataAccess
 {
     public static class SQLDataAccess
     {
+        // using DynamicParameters
+        // ------------------------------------------------------------------------------------
+        public static Dictionary<string, AcctID> LoadJsonRequest(AcctID acctID)
+        {
+
+            //DynamicParameters
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@acctID", acctID.AcctId);
+
+
+            string sql = string.Format(@"exec SelectByAccID @ID = @acctID;");
+
+
+            Dictionary<string, AcctID> dict1 = new Dictionary<string, AcctID>();
+            dict1.Add("acctInfo", LowMethods.LoadInformations<AcctID>(sql, dp));
+
+            return dict1;
+        }
+        // ------------------------------------------------------------------------------------
+
+
+
 
         // მეთოდი რომელიც აბრუნებს მონაცემებს, იმის მიხედვით
         // თუ რა query-ის ჩავწერთ *sql ცვლადში
         public static List<AcctID> LoadAccount(string acctId)
         {
             string sql = string.Format(@"exec SelectByAccID @ID = '{0}';", acctId);
-
+            
             return LowMethods.LoadInformations<AcctID>(sql);
         }
 

@@ -20,6 +20,8 @@ namespace DataLibrary.DataMethods
             return ConfigurationManager.ConnectionStrings[connString].ConnectionString;
         }
 
+
+        // ------------------------------------------------------------------------------------
         // მოგვაქ ინფორმაციას ბაზიდან, ხოლო შემდეგ მეთოდი აბრუნებს ლისტს
         public static List<T> LoadInformations<T>(string sql)
         {
@@ -29,5 +31,12 @@ namespace DataLibrary.DataMethods
             }
         }
 
+        public static T LoadInformations<T>(string sql, DynamicParameters dp)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                return cnn.Query<T>(sql, dp).FirstOrDefault();
+            }
+        }
     }
 }
