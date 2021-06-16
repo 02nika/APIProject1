@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using Dapper;
 using DataLibrary.Models;
 using DataLibrary.DataMethods;
+
 
 namespace DataLibrary.DataAccess
 {
@@ -16,7 +12,7 @@ namespace DataLibrary.DataAccess
     {
         // using DynamicParameters
         // ------------------------------------------------------------------------------------
-        public static Dictionary<string, AcctID> LoadJsonRequest(AcctID acctID)
+        public static JsonAuthorize LoadJsonRequest(AcctID acctID)
         {
 
             //DynamicParameters
@@ -27,10 +23,19 @@ namespace DataLibrary.DataAccess
             string sql = string.Format(@"exec SelectByAccID @ID = @acctID;");
 
 
-            Dictionary<string, AcctID> dict1 = new Dictionary<string, AcctID>();
-            dict1.Add("acctInfo", LowMethods.LoadInformations<AcctID>(sql, dp));
+            AcctID acctID1 = LowMethods.LoadInformations<AcctID>(sql, dp);
 
-            return dict1;
+            JsonAuthorize JA = new JsonAuthorize()
+            {
+                AcctId = acctID1,
+                MerchantCode = "M888",
+                Msg = acctID1 != null ? "success" : "fail",
+                Code = acctID1 != null ? 0 : 50100,
+                SerialNo = "20120722224255982841"
+                
+            };
+
+            return JA;
         }
         // ------------------------------------------------------------------------------------
 

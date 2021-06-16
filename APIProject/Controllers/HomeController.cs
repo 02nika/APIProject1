@@ -4,11 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DataLibrary.DataAccess;
-using Newtonsoft.Json;
-using System.Text.Json;
-using DataLibrary.Models;
-using System.IO;
-using System.Net;
 
 namespace APIProject.Controllers
 {
@@ -48,31 +43,7 @@ namespace APIProject.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult JsonRequest(int? id) 
-        {
-            // თავდაპირველად ვიჭერთ json რექუესთს.
-            Request.InputStream.Seek(0, SeekOrigin.Begin);
-            string json = new StreamReader(Request.InputStream).ReadToEnd();
-            AcctID input = JsonConvert.DeserializeObject<AcctID>(json);
-            //
 
-
-
-            //ასე უნდა დავაბრუნოთ ჯეისონი
-            //return Content(JsonConvert.SerializeObject(input), "application/json");
-            //Json(SQLDataAccess.LoadJsonRequest(input));
-
-            Dictionary<string, AcctID> dict1 = SQLDataAccess.LoadJsonRequest(input);
-            
-            return Content(JsonConvert.SerializeObject(dict1), "application/json");
-        }
-
-        [HttpGet]
-        public ActionResult JsonRequest()
-        {
-            return View();
-        }
 
     }
 }
