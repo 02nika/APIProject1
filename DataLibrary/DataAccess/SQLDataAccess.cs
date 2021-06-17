@@ -4,7 +4,7 @@ using System.Linq;
 using Dapper;
 using DataLibrary.Models;
 using DataLibrary.DataMethods;
-
+using DataLibrary.Models.UserBalance;
 
 namespace DataLibrary.DataAccess
 {
@@ -27,17 +27,48 @@ namespace DataLibrary.DataAccess
 
             JsonAuthorize JA = new JsonAuthorize()
             {
-                AcctId = acctID1,
+                AcctInfo = acctID1,
                 MerchantCode = "M888",
                 Msg = acctID1 != null ? "success" : "fail",
                 Code = acctID1 != null ? 0 : 50100,
                 SerialNo = "20120722224255982841"
-                
             };
 
             return JA;
         }
         // ------------------------------------------------------------------------------------
+
+
+
+        public static JsonAuthorize LoadJsonRequest(UserBalance acctID)
+        {
+
+            //DynamicParameters
+            DynamicParameters dp = new DynamicParameters();
+          
+            dp.Add("@acctID", acctID.AcctId);
+
+
+
+            string sql = string.Format(@"exec SelectByAccID @ID = @acctID;");
+
+
+            AcctID acctID1 = LowMethods.LoadInformations<AcctID>(sql, dp);
+
+            JsonAuthorize JA = new JsonAuthorize()
+            {
+                AcctInfo = acctID1,
+                MerchantCode = "M888",
+                Msg = acctID1 != null ? "success" : "fail",
+                Code = acctID1 != null ? 0 : 50100,
+                SerialNo = "20120722224255982841"
+
+            };
+
+            return JA;
+        }
+        // ------------------------------------------------------------------------------------
+
 
 
 

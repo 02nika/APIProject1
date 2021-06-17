@@ -8,7 +8,7 @@ namespace DataLibrary.Models
 {
     public class JsonAuthorize
     {
-        public AcctID AcctId { get; set; }
+        public AcctID AcctInfo { get; set; }
         public string MerchantCode { get; set; }
         public string Msg { get; set; }
         public int Code { get; set; }

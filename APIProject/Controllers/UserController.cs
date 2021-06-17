@@ -6,11 +6,11 @@ using System.Web.Mvc;
 using DataLibrary.DataAccess;
 using Newtonsoft.Json;
 using DataLibrary.Models;
-
+using DataLibrary.Models.UserBalance;
 
 namespace APIProject.Controllers
 {
-    public class JsonController : Controller
+    public class UserController : Controller
     {
         // GET: Json
         public ActionResult Index()
@@ -24,6 +24,17 @@ namespace APIProject.Controllers
             AcctID input = JsonLoader.JsonDeserializer<AcctID>(Request);
             JsonAuthorize JResult = SQLDataAccess.LoadJsonRequest(input);
 
+            return Content(JsonConvert.SerializeObject(JResult), "application/json");
+        }
+
+
+        [HttpPost]
+        public ActionResult GetBalanceRequest(int? id)
+        {
+
+            AcctID input = JsonLoader.JsonDeserializer<AcctID>(Request);
+            JsonAuthorize JResult = SQLDataAccess.LoadJsonRequest(input);
+            
             return Content(JsonConvert.SerializeObject(JResult), "application/json");
         }
     }
