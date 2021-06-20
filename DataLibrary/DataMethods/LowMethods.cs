@@ -5,8 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
-
-
+using System.Threading.Tasks;
 
 namespace DataLibrary.DataMethods
 {
@@ -21,11 +20,11 @@ namespace DataLibrary.DataMethods
 
         // ------------------------------------------------------------------------------------
         // მოგვაქ ინფორმაციას ბაზიდან, ხოლო შემდეგ მეთოდი აბრუნებს ლისტს
-        public static List<T> LoadInformations<T>(string sql)
+        public static async Task<IEnumerable<T>> LoadInformationsAsync<T>(string sql)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
-                return cnn.Query<T>(sql).ToList();
+                return await cnn.QueryAsync<T>(sql).ConfigureAwait(false);
             }
         }
 
@@ -34,6 +33,22 @@ namespace DataLibrary.DataMethods
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
                 return cnn.Query<T>(sql, dp).FirstOrDefault();
+            }
+        }
+
+        public static void InsertInformation<T>(string sql, DynamicParameters dp)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                cnn.Query<T>(sql, dp).FirstOrDefault();
+            }
+        }
+         
+        public static async Task<T> SelectAsync<T>(string sql)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                return await cnn.QueryFirstOrDefaultAsync<T>(sql).ConfigureAwait(false);
             }
         }
     }

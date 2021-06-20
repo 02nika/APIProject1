@@ -75,11 +75,11 @@ namespace DataLibrary.DataAccess
 
         // მეთოდი რომელიც აბრუნებს მონაცემებს, იმის მიხედვით
         // თუ რა query-ის ჩავწერთ *sql ცვლადში
-        public static List<AcctID> LoadAccount(string acctId)
+        public static IEnumerable<AcctID> LoadAccount(string acctId)
         {
             string sql = string.Format(@"exec SelectByAccID @ID = '{0}';", acctId);
             
-            return LowMethods.LoadInformations<AcctID>(sql);
+            return LowMethods.LoadInformationsAsync<AcctID>(sql).Result;
         }
 
 
