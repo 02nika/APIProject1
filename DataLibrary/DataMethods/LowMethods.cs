@@ -36,19 +36,20 @@ namespace DataLibrary.DataMethods
             }
         }
 
-        public static void InsertInformation<T>(string sql, DynamicParameters dp)
+        public static async Task InsertInformationAsync<T>(string procname, DynamicParameters dp)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
-                cnn.Query<T>(sql, dp).FirstOrDefault();
+                //exec name
+                await cnn.QueryFirstOrDefaultAsync<T>(procname, dp, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
             }
         }
          
-        public static async Task<T> SelectAsync<T>(string sql)
+        public static async Task<T> SelectAsync<T>(DynamicParameters dp, string procname)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
-                return await cnn.QueryFirstOrDefaultAsync<T>(sql).ConfigureAwait(false);
+                return await cnn.QueryFirstOrDefaultAsync<T>(procname, dp, commandType: CommandType.StoredProcedure).ConfigureAwait(false);
             }
         }
     }

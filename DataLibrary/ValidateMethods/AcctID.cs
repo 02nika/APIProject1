@@ -1,4 +1,5 @@
-﻿using DataLibrary.DataMethods;
+﻿using Dapper;
+using DataLibrary.DataMethods;
 using DataLibrary.Models.JsonModels;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,18 @@ namespace DataLibrary.ValidateMethods
 {
     public static class AcctID
     {
-        public static TransferResponse AllValidations(string transferId, int type,
-                                       string acctid, string currency, double amount)
+        public static TransferResponse AllValidations(string transferId, string acctid, 
+                                                      string currency, double amount)
         {
-            string transfer = CheckDuplicateTransferId(transferId, type);
-            string actId = GetAcctID(acctid, currency);
-            string amnt = CheckAmount(amount);
+            bool transfer = CheckDuplicateTransferId(transferId);
+            bool actId = GetAcctID(acctid, currency);
+            bool amnt = CheckAmount(amount);
 
-            if (actId == null)
+            if (!actId)
                 return ReturnNullTransferResponse(113);
-            else if (transfer == null)
+            else if (!transfer)
                 return ReturnNullTransferResponse(2);
-            else if (amnt == null)
+            else if (!amnt)
                 return ReturnNullTransferResponse(50113);
 
             
@@ -43,33 +44,38 @@ namespace DataLibrary.ValidateMethods
             };
         }
 
-        private static string CheckAmount(double amount)
+        private static bool CheckAmount(double amount)
         {
             if (amount >= 0)
-                return "Valid";
-            return null;
+                return true;
+            return false;
         }
 
-        private static string GetAcctID(string name, string curr)
+        private static bool GetAcctID(string name, string curr)
         {
-            string sql = string.Format(@"exec GetAcctRow @AcctId = '{0}', @curr = '{1}'", name, curr);
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@acctId", name);
+            dp.Add("@Curr", curr);
+            //GetAcctRow 
             
-            string acctID1 = LowMethods.SelectAsync<string>(sql).Result;
+            string acctID1 = LowMethods.SelectAsync<string>(dp, "GetAcctRow").Result;
             
             if (acctID1 != null)
-                return "Valid";
-            return acctID1;
+                return true;
+            return false;
         }
 
-        private static string CheckDuplicateTransferId(string transferId, int type)
+        private static bool CheckDuplicateTransferId(string transferId)
         {
-            string sql = string.Format(@"exec GetTransferIdFromTransferCheckType @TransId = '{0}', @Type = '{1}'", transferId, type);
-
-            string transferId1 = LowMethods.SelectAsync<string>(sql).Result;
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@TransId", transferId);
+            //GetTransferIdFromTransferCheckType
+            
+            string transferId1 = LowMethods.SelectAsync<string>(dp, "GetTransferIdFromTransferCheckType").Result;
 
             if (transferId1 == null)
-                return "Valid";
-            return null;
+                return true;
+            return false;
         }
     }
 }

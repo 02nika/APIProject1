@@ -16,8 +16,8 @@ namespace DataLibrary.DataAccess
         public static TransferResponse TransResponse(Transfer transfer)
         {
             //string n = AcctID.GetAcctID(transfer.AcctId);
-            TransferResponse validation = AcctID.AllValidations(transfer.TransferId, transfer.Type,
-                                               transfer.AcctId, transfer.Currency, transfer.Amount);
+            TransferResponse validation = AcctID.AllValidations(transfer.TransferId, transfer.AcctId, 
+                                                                transfer.Currency, transfer.Amount);
 
             if (validation == null)
             {
@@ -48,33 +48,36 @@ namespace DataLibrary.DataAccess
             dp.Add("@SpecialGameSequence", trans.SpecialGame.Sequence);
             dp.Add("@RefTicketIds", trans.RefTicketIds);
 
-            string sql = string.Format(@"exec InsertTransferTableType{0} 
-                @transferId = @TransferId, @acctId = @AcctId, @currency = @Currency, 
-                @amount = @Amount, @type = @Type, @channel = @Channel, @gameCode = @GameCode,
-                @ticketId = @TicketId, @referenceId = @ReferenceId, @specialGametype = @SpecialGameType,
-                @specialGamecount = @SpecialGameCount, @specialGamesequence = @SpecialGameSequence,
-                @refTicketIds = @RefTicketIds", number);
+            //InsertTransferTableType{0}
+            var _ = LowMethods.InsertInformationAsync<Transfer>($"InsertTransferTableType{number}", dp);
 
+            //GetTransferMerchantTxId
+            DynamicParameters mercharDp = new DynamicParameters();
+            mercharDp.Add("@TransferId", trans.TransferId);
 
-            LowMethods.InsertInformation<Transfer>(sql, dp);
+            //GetBalanceFromAcctInfo
+            DynamicParameters balanceDp = new DynamicParameters();
+            balanceDp.Add("@AcctId", trans.AcctId);
 
-            string merchantSql = string.Format("exec GetTransferMerchantTxId @transferId = '{0}', @type = {1}", trans.TransferId, trans.Type);
+            CreateNullTransferResponse(trans.TransferId, LowMethods.SelectAsync<int>(mercharDp, "GetTransferMerchantTxId").Result,
+                                       trans.AcctId, double.Parse(LowMethods.SelectAsync<string>(balanceDp, "GetBalanceFromAcctInfo").Result),
+                                       out TransferResponse Tres);
 
-            TransferResponse tResponse = new TransferResponse() { 
-                TransferId = trans.TransferId, MerchantCode = "M888",
-                MerchantTxId = LowMethods.SelectAsync<int>(merchantSql).Result,
-                AcctId = trans.AcctId,
-                Balance = double.Parse(LowMethods.SelectAsync<string>(ReturnAcctInfoBalanceQuery(trans.AcctId)).Result),
-                Msg = "success", Code = 0, SerialNo = "20120722231413699735"
-            };
-
-            return tResponse;
+            return Tres;
         }
 
-        private static string ReturnAcctInfoBalanceQuery(string acctId)
+        private static void CreateNullTransferResponse(string transferId, int merchantxId, string acctId, double balance, out TransferResponse tResponse,
+                                                       string merchantCode = "M888", string msg = "success",
+                                                       int code = 0, string serialNo = "20120722231413699735")
         {
-            string sql = string.Format("exec GetBalanceFromAcctInfo @acctId = '{0}'", acctId);
-            return sql;
+            tResponse = new TransferResponse()
+            {
+                TransferId = transferId, MerchantCode = merchantCode,
+                MerchantTxId = merchantxId, AcctId = acctId, Balance = balance,
+                Msg = msg, Code = code, SerialNo = serialNo
+            };
+            
         }
+
     }
 }
